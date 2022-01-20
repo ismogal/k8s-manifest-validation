@@ -27,7 +27,7 @@
     },
     "metadata": {
       "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2"
     },
     "spec": {
       "description": "spec holds configuration that could apply to any operator.",
@@ -67,7 +67,7 @@
                 "format": "date-time"
               },
               "message": {
-                "description": "message provides additional information about the current condition. This is only to be consumed by humans.",
+                "description": "message provides additional information about the current condition. This is only to be consumed by humans.  It may contain Line Feed characters (U+000A), which should be rendered as new lines.",
                 "type": [
                   "string",
                   "null"

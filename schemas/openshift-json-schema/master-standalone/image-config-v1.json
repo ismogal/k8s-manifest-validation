@@ -27,7 +27,7 @@
     },
     "metadata": {
       "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2"
     },
     "spec": {
       "description": "spec holds user settable values for configuration",
@@ -127,6 +127,22 @@
                   "null"
                 ]
               }
+            },
+            "containerRuntimeSearchRegistries": {
+              "description": "containerRuntimeSearchRegistries are registries that will be searched when pulling images that do not have fully qualified domains in their pull specs. Registries will be searched in the order provided in the list. Note: this search list only works with the container runtime, i.e CRI-O. Will NOT work with builds or imagestream imports.",
+              "type": [
+                "array",
+                "null"
+              ],
+              "format": "hostname",
+              "minItems": 1,
+              "items": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "x-kubernetes-list-type": "set"
             },
             "insecureRegistries": {
               "description": "insecureRegistries are registries which do not have a valid TLS certificates or only support HTTP connections.",

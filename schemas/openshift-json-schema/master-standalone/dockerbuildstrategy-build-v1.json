@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "buildArgs": {
-      "description": "buildArgs contains build arguments that will be resolved in the Dockerfile.  See https://docs.docker.com/engine/reference/builder/#/arg for more details.",
+      "description": "buildArgs contains build arguments that will be resolved in the Dockerfile.  See https://docs.docker.com/engine/reference/builder/#/arg for more details. NOTE: Only the 'name' and 'value' fields are supported. Any settings on the 'valueFrom' field are ignored.",
       "type": [
         "array",
         "null"

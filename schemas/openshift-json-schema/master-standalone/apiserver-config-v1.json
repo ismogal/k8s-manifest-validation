@@ -27,7 +27,7 @@
     },
     "metadata": {
       "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2"
     },
     "spec": {
       "description": "spec holds user settable values for configuration",
@@ -162,7 +162,7 @@
           }
         },
         "tlsSecurityProfile": {
-          "description": "tlsSecurityProfile specifies settings for TLS connections for externally exposed servers. \n If unset, a default (which may change between releases) is chosen. Note that only Old and Intermediate profiles are currently supported, and the maximum available MinTLSVersions is VersionTLS12.",
+          "description": "tlsSecurityProfile specifies settings for TLS connections for externally exposed servers. \n If unset, a default (which may change between releases) is chosen. Note that only Old, Intermediate and Custom profiles are currently supported, and the maximum available MinTLSVersions is VersionTLS12.",
           "type": [
             "object",
             "null"

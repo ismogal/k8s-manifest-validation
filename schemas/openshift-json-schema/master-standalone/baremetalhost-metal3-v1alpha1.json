@@ -24,7 +24,7 @@
     },
     "metadata": {
       "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2"
     },
     "spec": {
       "description": "BareMetalHostSpec defines the desired state of BareMetalHost",
@@ -36,6 +36,17 @@
         "online"
       ],
       "properties": {
+        "automatedCleaningMode": {
+          "description": "When set to disabled, automated cleaning will be avoided during provisioning and deprovisioning.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "metadata",
+            "disabled"
+          ]
+        },
         "bmc": {
           "description": "How do we connect to the BMC?",
           "type": [
@@ -80,6 +91,7 @@
           ],
           "enum": [
             "UEFI",
+            "UEFISecureBoot",
             "legacy"
           ]
         },
@@ -169,13 +181,15 @@
             "null"
           ],
           "required": [
-            "checksum",
             "url"
           ],
           "properties": {
             "checksum": {
               "description": "Checksum is the checksum for the image.",
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "checksumType": {
               "description": "ChecksumType is the checksum algorithm for the image. e.g md5, sha256, sha512",
@@ -190,7 +204,7 @@
               ]
             },
             "format": {
-              "description": "DiskFormat contains the format of the image (raw, qcow2, ...) Needs to be set to raw for raw images streaming",
+              "description": "DiskFormat contains the format of the image (raw, qcow2, ...). Needs to be set to raw for raw images streaming. Note live-iso means an iso referenced by the url will be live-booted and not deployed to disk, and in this case the checksum options are not required and if specified will be ignored.",
               "type": [
                 "string",
                 "null"
@@ -199,7 +213,8 @@
                 "raw",
                 "qcow2",
                 "vdi",
-                "vmdk"
+                "vmdk",
+                "live-iso"
               ]
             },
             "url": {
@@ -257,6 +272,204 @@
         "online": {
           "description": "Should the server be online?",
           "type": "boolean"
+        },
+        "raid": {
+          "description": "RAID configuration for bare metal server",
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "hardwareRAIDVolumes": {
+              "description": "The list of logical disks for hardware RAID, if rootDeviceHints isn't used, first volume is root volume.",
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "description": "HardwareRAIDVolume defines the desired configuration of volume in hardware RAID",
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "required": [
+                  "level"
+                ],
+                "properties": {
+                  "level": {
+                    "description": "RAID level for the logical disk. The following levels are supported: 0;1;2;5;6;1+0;5+0;6+0.",
+                    "type": "string",
+                    "enum": [
+                      "0",
+                      "1",
+                      "2",
+                      "5",
+                      "6",
+                      "1+0",
+                      "5+0",
+                      "6+0"
+                    ]
+                  },
+                  "name": {
+                    "description": "Name of the volume. Should be unique within the Node. If not specified, volume name will be auto-generated.",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 64
+                  },
+                  "numberOfPhysicalDisks": {
+                    "description": "Integer, number of physical disks to use for the logical disk. Defaults to minimum number of disks required for the particular RAID level.",
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1
+                  },
+                  "rotational": {
+                    "description": "Select disks with only rotational or solid-state storage",
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "sizeGibibytes": {
+                    "description": "Size (Integer) of the logical disk to be created in GiB. If unspecified or set be 0, the maximum capacity of disk will be used for logical disk.",
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            "softwareRAIDVolumes": {
+              "description": "The list of logical disks for software RAID, if rootDeviceHints isn't used, first volume is root volume. If HardwareRAIDVolumes is set this item will be invalid. The number of created Software RAID devices must be 1 or 2. If there is only one Software RAID device, it has to be a RAID-1. If there are two, the first one has to be a RAID-1, while the RAID level for the second one can be 0, 1, or 1+0. As the first RAID device will be the deployment device, enforcing a RAID-1 reduces the risk of ending up with a non-booting node in case of a disk failure.",
+              "type": [
+                "array",
+                "null"
+              ],
+              "maxItems": 2,
+              "items": {
+                "description": "SoftwareRAIDVolume defines the desired configuration of volume in software RAID",
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "required": [
+                  "level"
+                ],
+                "properties": {
+                  "level": {
+                    "description": "RAID level for the logical disk. The following levels are supported: 0;1;1+0.",
+                    "type": "string",
+                    "enum": [
+                      "0",
+                      "1",
+                      "1+0"
+                    ]
+                  },
+                  "physicalDisks": {
+                    "description": "A list of device hints, the number of items should be greater than or equal to 2.",
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "minItems": 2,
+                    "items": {
+                      "description": "RootDeviceHints holds the hints for specifying the storage location for the root filesystem for the image.",
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "deviceName": {
+                          "description": "A Linux device name like \"/dev/vda\". The hint must match the actual value exactly.",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "hctl": {
+                          "description": "A SCSI bus address like 0:0:0:0. The hint must match the actual value exactly.",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "minSizeGigabytes": {
+                          "description": "The minimum size of the device in Gigabytes.",
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "model": {
+                          "description": "A vendor-specific device identifier. The hint can be a substring of the actual value.",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "rotational": {
+                          "description": "True if the device should use spinning media, false otherwise.",
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "serialNumber": {
+                          "description": "Device serial number. The hint must match the actual value exactly.",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "vendor": {
+                          "description": "The name of the vendor or manufacturer of the device. The hint can be a substring of the actual value.",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "wwn": {
+                          "description": "Unique storage identifier. The hint must match the actual value exactly.",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "wwnVendorExtension": {
+                          "description": "Unique vendor storage identifier. The hint must match the actual value exactly.",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "wwnWithExtension": {
+                          "description": "Unique storage identifier with the vendor extension appended. The hint must match the actual value exactly.",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "sizeGibibytes": {
+                    "description": "Size (Integer) of the logical disk to be created in GiB. If unspecified or set be 0, the maximum capacity of disk will be used for logical disk.",
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
         },
         "rootDeviceHints": {
           "description": "Provide guidance about how to choose the device for the image being provisioned.",
@@ -372,7 +585,7 @@
                 "format": "date-time"
               },
               "value": {
-                "description": "Required. The taint value corresponding to the taint key.",
+                "description": "The taint value corresponding to the taint key.",
                 "type": [
                   "string",
                   "null"
@@ -413,14 +626,18 @@
         "null"
       ],
       "required": [
+        "errorCount",
         "errorMessage",
         "hardwareProfile",
-        "operationHistory",
         "operationalStatus",
         "poweredOn",
         "provisioning"
       ],
       "properties": {
+        "errorCount": {
+          "description": "ErrorCount records how many times the host has encoutered an error since the last successful operation",
+          "type": "integer"
+        },
         "errorMessage": {
           "description": "the last error message reported by the provisioning subsystem",
           "type": "string"
@@ -432,8 +649,10 @@
             "null"
           ],
           "enum": [
+            "provisioned registration error",
             "registration error",
             "inspection error",
+            "preparation error",
             "provisioning error",
             "power management error"
           ]
@@ -482,39 +701,39 @@
             "object",
             "null"
           ],
-          "required": [
-            "cpu",
-            "firmware",
-            "hostname",
-            "nics",
-            "ramMebibytes",
-            "storage",
-            "systemVendor"
-          ],
           "properties": {
             "cpu": {
               "description": "CPU describes one processor on the host.",
-              "type": "object",
-              "required": [
-                "arch",
-                "clockMegahertz",
-                "count",
-                "flags",
-                "model"
+              "type": [
+                "object",
+                "null"
               ],
               "properties": {
                 "arch": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "clockMegahertz": {
                   "description": "ClockSpeed is a clock speed in MHz",
-                  "type": "number"
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "format": "double"
                 },
                 "count": {
-                  "type": "integer"
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
                 },
                 "flags": {
-                  "type": "array",
+                  "type": [
+                    "array",
+                    "null"
+                  ],
                   "items": {
                     "type": [
                       "string",
@@ -523,91 +742,119 @@
                   }
                 },
                 "model": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               }
             },
             "firmware": {
               "description": "Firmware describes the firmware on the host.",
-              "type": "object",
-              "required": [
-                "bios"
+              "type": [
+                "object",
+                "null"
               ],
               "properties": {
                 "bios": {
                   "description": "The BIOS for this firmware",
-                  "type": "object",
-                  "required": [
-                    "date",
-                    "vendor",
-                    "version"
+                  "type": [
+                    "object",
+                    "null"
                   ],
                   "properties": {
                     "date": {
                       "description": "The release/build date for this BIOS",
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "vendor": {
                       "description": "The vendor name for this BIOS",
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "version": {
                       "description": "The version of the BIOS",
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     }
                   }
                 }
               }
             },
             "hostname": {
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "nics": {
-              "type": "array",
+              "type": [
+                "array",
+                "null"
+              ],
               "items": {
                 "description": "NIC describes one network interface on the host.",
                 "type": [
                   "object",
                   "null"
                 ],
-                "required": [
-                  "ip",
-                  "mac",
-                  "model",
-                  "name",
-                  "pxe",
-                  "speedGbps",
-                  "vlanId"
-                ],
                 "properties": {
                   "ip": {
-                    "description": "The IP address of the device",
-                    "type": "string"
+                    "description": "The IP address of the interface. This will be an IPv4 or IPv6 address if one is present.  If both IPv4 and IPv6 addresses are present in a dual-stack environment, two nics will be output, one with each IP.",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "mac": {
-                    "description": "The device MAC addr",
-                    "type": "string",
+                    "description": "The device MAC address",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "pattern": "[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}"
                   },
                   "model": {
-                    "description": "The name of the model, e.g. \"virt-io\"",
-                    "type": "string"
+                    "description": "The vendor and product IDs of the NIC, e.g. \"0x8086 0x1572\"",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "name": {
-                    "description": "The name of the NIC, e.g. \"nic-1\"",
-                    "type": "string"
+                    "description": "The name of the network interface, e.g. \"en0\"",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "pxe": {
                     "description": "Whether the NIC is PXE Bootable",
-                    "type": "boolean"
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
                   },
                   "speedGbps": {
-                    "description": "The speed of the device",
-                    "type": "integer"
+                    "description": "The speed of the device in Gigabits per second",
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
                   },
                   "vlanId": {
                     "description": "The untagged VLAN ID",
-                    "type": "integer",
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
                     "format": "int32",
                     "maximum": 4094,
                     "minimum": 0
@@ -624,13 +871,13 @@
                         "object",
                         "null"
                       ],
-                      "required": [
-                        "id"
-                      ],
                       "properties": {
                         "id": {
                           "description": "VLANID is a 12-bit 802.1Q VLAN identifier",
-                          "type": "integer",
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
                           "format": "int32",
                           "maximum": 4094,
                           "minimum": 0
@@ -648,21 +895,21 @@
               }
             },
             "ramMebibytes": {
-              "type": "integer"
+              "type": [
+                "integer",
+                "null"
+              ]
             },
             "storage": {
-              "type": "array",
+              "type": [
+                "array",
+                "null"
+              ],
               "items": {
                 "description": "Storage describes one storage device (disk, SSD, etc.) on the host.",
                 "type": [
                   "object",
                   "null"
-                ],
-                "required": [
-                  "name",
-                  "rotational",
-                  "serialNumber",
-                  "sizeBytes"
                 ],
                 "properties": {
                   "hctl": {
@@ -680,20 +927,32 @@
                     ]
                   },
                   "name": {
-                    "description": "A name for the disk, e.g. \"disk 1 (boot)\"",
-                    "type": "string"
+                    "description": "The Linux device name of the disk, e.g. \"/dev/sda\". Note that this may not be stable across reboots.",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "rotational": {
                     "description": "Whether this disk represents rotational storage",
-                    "type": "boolean"
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
                   },
                   "serialNumber": {
                     "description": "The serial number of the device",
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "sizeBytes": {
                     "description": "The size of the disk in Bytes",
-                    "type": "integer",
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
                     "format": "int64"
                   },
                   "vendor": {
@@ -729,21 +988,28 @@
             },
             "systemVendor": {
               "description": "HardwareSystemVendor stores details about the whole hardware system.",
-              "type": "object",
-              "required": [
-                "manufacturer",
-                "productName",
-                "serialNumber"
+              "type": [
+                "object",
+                "null"
               ],
               "properties": {
                 "manufacturer": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "productName": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "serialNumber": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               }
             }
@@ -763,7 +1029,10 @@
         },
         "operationHistory": {
           "description": "OperationHistory holds information about operations performed on this host.",
-          "type": "object",
+          "type": [
+            "object",
+            "null"
+          ],
           "properties": {
             "deprovision": {
               "description": "OperationMetric contains metadata about an operation (inspection, provisioning, etc.) used for tracking metrics.",
@@ -834,7 +1103,9 @@
             "",
             "OK",
             "discovered",
-            "error"
+            "error",
+            "delayed",
+            "detached"
           ]
         },
         "poweredOn": {
@@ -861,6 +1132,7 @@
               ],
               "enum": [
                 "UEFI",
+                "UEFISecureBoot",
                 "legacy"
               ]
             },
@@ -871,13 +1143,15 @@
                 "null"
               ],
               "required": [
-                "checksum",
                 "url"
               ],
               "properties": {
                 "checksum": {
                   "description": "Checksum is the checksum for the image.",
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "checksumType": {
                   "description": "ChecksumType is the checksum algorithm for the image. e.g md5, sha256, sha512",
@@ -892,7 +1166,7 @@
                   ]
                 },
                 "format": {
-                  "description": "DiskFormat contains the format of the image (raw, qcow2, ...) Needs to be set to raw for raw images streaming",
+                  "description": "DiskFormat contains the format of the image (raw, qcow2, ...). Needs to be set to raw for raw images streaming. Note live-iso means an iso referenced by the url will be live-booted and not deployed to disk, and in this case the checksum options are not required and if specified will be ignored.",
                   "type": [
                     "string",
                     "null"
@@ -901,12 +1175,211 @@
                     "raw",
                     "qcow2",
                     "vdi",
-                    "vmdk"
+                    "vmdk",
+                    "live-iso"
                   ]
                 },
                 "url": {
                   "description": "URL is a location of an image to deploy.",
                   "type": "string"
+                }
+              }
+            },
+            "raid": {
+              "description": "The Raid set by the user",
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "hardwareRAIDVolumes": {
+                  "description": "The list of logical disks for hardware RAID, if rootDeviceHints isn't used, first volume is root volume.",
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "items": {
+                    "description": "HardwareRAIDVolume defines the desired configuration of volume in hardware RAID",
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "required": [
+                      "level"
+                    ],
+                    "properties": {
+                      "level": {
+                        "description": "RAID level for the logical disk. The following levels are supported: 0;1;2;5;6;1+0;5+0;6+0.",
+                        "type": "string",
+                        "enum": [
+                          "0",
+                          "1",
+                          "2",
+                          "5",
+                          "6",
+                          "1+0",
+                          "5+0",
+                          "6+0"
+                        ]
+                      },
+                      "name": {
+                        "description": "Name of the volume. Should be unique within the Node. If not specified, volume name will be auto-generated.",
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 64
+                      },
+                      "numberOfPhysicalDisks": {
+                        "description": "Integer, number of physical disks to use for the logical disk. Defaults to minimum number of disks required for the particular RAID level.",
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 1
+                      },
+                      "rotational": {
+                        "description": "Select disks with only rotational or solid-state storage",
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      },
+                      "sizeGibibytes": {
+                        "description": "Size (Integer) of the logical disk to be created in GiB. If unspecified or set be 0, the maximum capacity of disk will be used for logical disk.",
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                "softwareRAIDVolumes": {
+                  "description": "The list of logical disks for software RAID, if rootDeviceHints isn't used, first volume is root volume. If HardwareRAIDVolumes is set this item will be invalid. The number of created Software RAID devices must be 1 or 2. If there is only one Software RAID device, it has to be a RAID-1. If there are two, the first one has to be a RAID-1, while the RAID level for the second one can be 0, 1, or 1+0. As the first RAID device will be the deployment device, enforcing a RAID-1 reduces the risk of ending up with a non-booting node in case of a disk failure.",
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "maxItems": 2,
+                  "items": {
+                    "description": "SoftwareRAIDVolume defines the desired configuration of volume in software RAID",
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "required": [
+                      "level"
+                    ],
+                    "properties": {
+                      "level": {
+                        "description": "RAID level for the logical disk. The following levels are supported: 0;1;1+0.",
+                        "type": "string",
+                        "enum": [
+                          "0",
+                          "1",
+                          "1+0"
+                        ]
+                      },
+                      "physicalDisks": {
+                        "description": "A list of device hints, the number of items should be greater than or equal to 2.",
+                        "type": [
+                          "array",
+                          "null"
+                        ],
+                        "minItems": 2,
+                        "items": {
+                          "description": "RootDeviceHints holds the hints for specifying the storage location for the root filesystem for the image.",
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "deviceName": {
+                              "description": "A Linux device name like \"/dev/vda\". The hint must match the actual value exactly.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "hctl": {
+                              "description": "A SCSI bus address like 0:0:0:0. The hint must match the actual value exactly.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "minSizeGigabytes": {
+                              "description": "The minimum size of the device in Gigabytes.",
+                              "type": [
+                                "integer",
+                                "null"
+                              ],
+                              "minimum": 0
+                            },
+                            "model": {
+                              "description": "A vendor-specific device identifier. The hint can be a substring of the actual value.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "rotational": {
+                              "description": "True if the device should use spinning media, false otherwise.",
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "serialNumber": {
+                              "description": "Device serial number. The hint must match the actual value exactly.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "vendor": {
+                              "description": "The name of the vendor or manufacturer of the device. The hint can be a substring of the actual value.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "wwn": {
+                              "description": "Unique storage identifier. The hint must match the actual value exactly.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "wwnVendorExtension": {
+                              "description": "Unique vendor storage identifier. The hint must match the actual value exactly.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "wwnWithExtension": {
+                              "description": "Unique storage identifier with the vendor extension appended. The hint must match the actual value exactly.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "sizeGibibytes": {
+                        "description": "Size (Integer) of the logical disk to be created in GiB. If unspecified or set be 0, the maximum capacity of disk will be used for logical disk.",
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 0
+                      }
+                    }
+                  }
                 }
               }
             },

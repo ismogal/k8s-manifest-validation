@@ -12,7 +12,6 @@
         "null"
       ],
       "enum": [
-        "v1",
         "user.openshift.io/v1"
       ]
     },
@@ -41,11 +40,6 @@
     }
   },
   "x-kubernetes-group-version-kind": [
-    {
-      "group": "",
-      "kind": "UserList",
-      "version": "v1"
-    },
     {
       "group": "user.openshift.io",
       "kind": "UserList",

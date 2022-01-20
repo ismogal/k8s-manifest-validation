@@ -7,7 +7,7 @@
       "$ref": "_definitions.json#/definitions/io.k8s.api.core.v1.ObjectReference"
     },
     "lastTriggeredImageID": {
-      "description": "lastTriggeredImageID is used internally by the ImageChangeController to save last used image ID for build",
+      "description": "lastTriggeredImageID is used internally by the ImageChangeController to save last used image ID for build This field is deprecated and will be removed in a future release. Deprecated",
       "type": [
         "string",
         "null"

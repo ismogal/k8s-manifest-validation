@@ -27,7 +27,7 @@
     },
     "metadata": {
       "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2"
     },
     "spec": {
       "description": "spec holds user settable values for configuration",
@@ -120,6 +120,13 @@
                 "null"
               ]
             },
+            "equinixMetal": {
+              "description": "EquinixMetal contains settings specific to the Equinix Metal infrastructure provider.",
+              "type": [
+                "object",
+                "null"
+              ]
+            },
             "gcp": {
               "description": "GCP contains settings specific to the Google Cloud Platform infrastructure provider.",
               "type": [
@@ -129,6 +136,13 @@
             },
             "ibmcloud": {
               "description": "IBMCloud contains settings specific to the IBMCloud infrastructure provider.",
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "kubevirt": {
+              "description": "Kubevirt contains settings specific to the kubevirt infrastructure provider.",
               "type": [
                 "object",
                 "null"
@@ -149,7 +163,7 @@
               ]
             },
             "type": {
-              "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
+              "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"KubeVirt\", \"EquinixMetal\", and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
               "type": [
                 "string",
                 "null"
@@ -165,7 +179,9 @@
                 "None",
                 "VSphere",
                 "oVirt",
-                "IBMCloud"
+                "IBMCloud",
+                "KubeVirt",
+                "EquinixMetal"
               ]
             },
             "vsphere": {
@@ -200,8 +216,19 @@
             "null"
           ]
         },
+        "controlPlaneTopology": {
+          "description": "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation",
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "HighlyAvailable",
+            "SingleReplica"
+          ]
+        },
         "etcdDiscoveryDomain": {
-          "description": "etcdDiscoveryDomain is the domain used to fetch the SRV records for discovering etcd servers and clients. For more info: https://github.com/etcd-io/etcd/blob/329be66e8b3f9e2e6af83c123ff89297e49ebd15/Documentation/op-guide/clustering.md#dns-discovery",
+          "description": "etcdDiscoveryDomain is the domain used to fetch the SRV records for discovering etcd servers and clients. For more info: https://github.com/etcd-io/etcd/blob/329be66e8b3f9e2e6af83c123ff89297e49ebd15/Documentation/op-guide/clustering.md#dns-discovery deprecated: as of 4.7, this field is no longer set or honored.  It will be removed in a future release.",
           "type": [
             "string",
             "null"
@@ -212,6 +239,17 @@
           "type": [
             "string",
             "null"
+          ]
+        },
+        "infrastructureTopology": {
+          "description": "infrastructureTopology expresses the expectations for infrastructure services that do not run on control plane nodes, usually indicated by a node selector for a `role` value other than `master`. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation",
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "HighlyAvailable",
+            "SingleReplica"
           ]
         },
         "platform": {
@@ -231,7 +269,9 @@
             "None",
             "VSphere",
             "oVirt",
-            "IBMCloud"
+            "IBMCloud",
+            "KubeVirt",
+            "EquinixMetal"
           ]
         },
         "platformStatus": {
@@ -254,6 +294,41 @@
                     "string",
                     "null"
                   ]
+                },
+                "resourceTags": {
+                  "description": "resourceTags is a list of additional tags to apply to AWS resources created for the cluster. See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html for information on tagging AWS resources. AWS supports a maximum of 50 tags per resource. OpenShift reserves 25 tags for its use, leaving 25 tags available for the user.",
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "maxItems": 25,
+                  "items": {
+                    "description": "AWSResourceTag is a tag to apply to AWS resources created for the cluster.",
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "required": [
+                      "key",
+                      "value"
+                    ],
+                    "properties": {
+                      "key": {
+                        "description": "key is the key of the tag",
+                        "type": "string",
+                        "maxLength": 128,
+                        "minLength": 1,
+                        "pattern": "^[0-9A-Za-z_.:/=+-@]+$"
+                      },
+                      "value": {
+                        "description": "value is the value of the tag. Some AWS service do not support empty values. Since tags are added to resources in many services, the length of the tag value must meet the requirements of all services.",
+                        "type": "string",
+                        "maxLength": 256,
+                        "minLength": 1,
+                        "pattern": "^[0-9A-Za-z_.:/=+-@]+$"
+                      }
+                    }
+                  }
                 },
                 "serviceEndpoints": {
                   "description": "ServiceEndpoints list contains custom endpoints which will override default service endpoint of AWS Services. There must be only one ServiceEndpoint for a service.",
@@ -356,6 +431,29 @@
                 }
               }
             },
+            "equinixMetal": {
+              "description": "EquinixMetal contains settings specific to the Equinix Metal infrastructure provider.",
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "apiServerInternalIP": {
+                  "description": "apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used by components inside the cluster, like kubelets using the infrastructure rather than Kubernetes networking. It is the IP that the Infrastructure.status.apiServerInternalURI points to. It is the IP for a self-hosted load balancer in front of the API servers.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "ingressIP": {
+                  "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            },
             "gcp": {
               "description": "GCP contains settings specific to the Google Cloud Platform infrastructure provider.",
               "type": [
@@ -402,6 +500,29 @@
                 },
                 "resourceGroupName": {
                   "description": "ResourceGroupName is the Resource Group for new IBMCloud resources created for the cluster.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "kubevirt": {
+              "description": "Kubevirt contains settings specific to the kubevirt infrastructure provider.",
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "apiServerInternalIP": {
+                  "description": "apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used by components inside the cluster, like kubelets using the infrastructure rather than Kubernetes networking. It is the IP that the Infrastructure.status.apiServerInternalURI points to. It is the IP for a self-hosted load balancer in front of the API servers.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "ingressIP": {
+                  "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.",
                   "type": [
                     "string",
                     "null"
@@ -477,7 +598,7 @@
               }
             },
             "type": {
-              "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform. \n This value will be synced with to the `status.platform` and `status.platformStatus.type`. Currently this value cannot be changed once set.",
+              "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"EquinixMetal\", and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform. \n This value will be synced with to the `status.platform` and `status.platformStatus.type`. Currently this value cannot be changed once set.",
               "type": [
                 "string",
                 "null"
@@ -493,7 +614,9 @@
                 "None",
                 "VSphere",
                 "oVirt",
-                "IBMCloud"
+                "IBMCloud",
+                "KubeVirt",
+                "EquinixMetal"
               ]
             },
             "vsphere": {

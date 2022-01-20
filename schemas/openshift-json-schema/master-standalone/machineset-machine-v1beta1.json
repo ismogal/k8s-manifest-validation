@@ -1,5 +1,5 @@
 {
-  "description": "/ [MachineSet] MachineSet ensures that a specified number of machines replicas are running at any given time.",
+  "description": "MachineSet ensures that a specified number of machines replicas are running at any given time.",
   "type": "object",
   "properties": {
     "apiVersion": {
@@ -24,10 +24,10 @@
     },
     "metadata": {
       "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2"
     },
     "spec": {
-      "description": "/ [MachineSetSpec] MachineSetSpec defines the desired state of MachineSet",
+      "description": "MachineSetSpec defines the desired state of MachineSet",
       "type": [
         "object",
         "null"
@@ -132,7 +132,7 @@
           ],
           "properties": {
             "metadata": {
-              "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
+              "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
               "type": [
                 "object",
                 "null"
@@ -240,7 +240,7 @@
               }
             },
             "spec": {
-              "description": "Specification of the desired behavior of the machine. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
+              "description": "Specification of the desired behavior of the machine. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status",
               "type": [
                 "object",
                 "null"
@@ -370,10 +370,6 @@
                   "properties": {
                     "value": {
                       "description": "Value is an inlined, serialized representation of the resource configuration. It is recommended that providers maintain their own versioned API types that should be serialized/deserialized from this field, akin to component config.",
-                      "type": [
-                        "object",
-                        "null"
-                      ],
                       "x-kubernetes-preserve-unknown-fields": true
                     }
                   }
@@ -428,7 +424,7 @@
       }
     },
     "status": {
-      "description": "/ [MachineSetStatus] MachineSetStatus defines the observed state of MachineSet",
+      "description": "MachineSetStatus defines the observed state of MachineSet",
       "type": [
         "object",
         "null"

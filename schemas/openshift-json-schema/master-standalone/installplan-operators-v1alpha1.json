@@ -28,7 +28,7 @@
     },
     "metadata": {
       "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2"
     },
     "spec": {
       "description": "InstallPlanSpec defines a set of Application resources to be installed",
@@ -364,6 +364,13 @@
             }
           }
         },
+        "message": {
+          "description": "Message is a human-readable message containing detailed information that may be important to understanding why the plan has its current status.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "phase": {
           "description": "InstallPlanPhase is the current status of a InstallPlan as a whole.",
           "type": "string"
@@ -432,6 +439,14 @@
               }
             }
           }
+        },
+        "startTime": {
+          "description": "StartTime is the time when the controller began applying the resources listed in the plan to the cluster.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
         }
       }
     }

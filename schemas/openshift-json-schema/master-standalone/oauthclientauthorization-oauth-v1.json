@@ -9,7 +9,6 @@
         "null"
       ],
       "enum": [
-        "v1",
         "oauth.openshift.io/v1"
       ]
     },
@@ -62,11 +61,6 @@
     }
   },
   "x-kubernetes-group-version-kind": [
-    {
-      "group": "",
-      "kind": "OAuthClientAuthorization",
-      "version": "v1"
-    },
     {
       "group": "oauth.openshift.io",
       "kind": "OAuthClientAuthorization",

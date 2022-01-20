@@ -134,11 +134,6 @@
       "version": "v1beta1"
     },
     {
-      "group": "batch",
-      "kind": "WatchEvent",
-      "version": "v2alpha1"
-    },
-    {
       "group": "build.openshift.io",
       "kind": "WatchEvent",
       "version": "v1"
@@ -166,7 +161,7 @@
     {
       "group": "discovery.k8s.io",
       "kind": "WatchEvent",
-      "version": "v1alpha1"
+      "version": "v1"
     },
     {
       "group": "discovery.k8s.io",
@@ -194,12 +189,22 @@
       "version": "v1alpha1"
     },
     {
+      "group": "flowcontrol.apiserver.k8s.io",
+      "kind": "WatchEvent",
+      "version": "v1beta1"
+    },
+    {
       "group": "image.openshift.io",
       "kind": "WatchEvent",
       "version": "v1"
     },
     {
       "group": "imagepolicy.k8s.io",
+      "kind": "WatchEvent",
+      "version": "v1alpha1"
+    },
+    {
+      "group": "internal.apiserver.k8s.io",
       "kind": "WatchEvent",
       "version": "v1alpha1"
     },
@@ -212,6 +217,11 @@
       "group": "networking.k8s.io",
       "kind": "WatchEvent",
       "version": "v1beta1"
+    },
+    {
+      "group": "node.k8s.io",
+      "kind": "WatchEvent",
+      "version": "v1"
     },
     {
       "group": "node.k8s.io",
@@ -225,6 +235,11 @@
     },
     {
       "group": "oauth.openshift.io",
+      "kind": "WatchEvent",
+      "version": "v1"
+    },
+    {
+      "group": "policy",
       "kind": "WatchEvent",
       "version": "v1"
     },
@@ -282,11 +297,6 @@
       "group": "security.openshift.io",
       "kind": "WatchEvent",
       "version": "v1"
-    },
-    {
-      "group": "settings.k8s.io",
-      "kind": "WatchEvent",
-      "version": "v1alpha1"
     },
     {
       "group": "storage.k8s.io",

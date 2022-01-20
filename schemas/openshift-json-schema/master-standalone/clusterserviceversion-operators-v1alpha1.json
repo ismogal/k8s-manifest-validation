@@ -28,7 +28,7 @@
     },
     "metadata": {
       "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2"
     },
     "spec": {
       "description": "ClusterServiceVersionSpec declarations tell OLM how to install an operator that can manage apps for a given version.",
@@ -546,6 +546,21 @@
                   }
                 }
               }
+            }
+          }
+        },
+        "cleanup": {
+          "description": "Cleanup specifies the cleanup behaviour when the CSV gets deleted",
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "enabled"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
             }
           }
         },
@@ -1334,10 +1349,6 @@
                             "properties": {
                               "metadata": {
                                 "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-                                "type": [
-                                  "object",
-                                  "null"
-                                ],
                                 "x-kubernetes-preserve-unknown-fields": true
                               },
                               "spec": {
@@ -2151,7 +2162,7 @@
                                                     }
                                                   },
                                                   "fieldRef": {
-                                                    "description": "Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.",
+                                                    "description": "Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.",
                                                     "type": [
                                                       "object",
                                                       "null"
@@ -3109,6 +3120,29 @@
                                                 }
                                               }
                                             },
+                                            "seccompProfile": {
+                                              "description": "The seccomp options to use by this container. If seccomp options are provided at both the pod & container level, the container options override the pod options.",
+                                              "type": [
+                                                "object",
+                                                "null"
+                                              ],
+                                              "required": [
+                                                "type"
+                                              ],
+                                              "properties": {
+                                                "localhostProfile": {
+                                                  "description": "localhostProfile indicates a profile defined in a file on the node should be used. The profile must be preconfigured on the node to work. Must be a descending path, relative to the kubelet's configured seccomp profile location. Must only be set if type is \"Localhost\".",
+                                                  "type": [
+                                                    "string",
+                                                    "null"
+                                                  ]
+                                                },
+                                                "type": {
+                                                  "description": "type indicates which kind of seccomp profile will be applied. Valid options are: \n Localhost - a profile defined in a file on the node should be used. RuntimeDefault - the container runtime default profile should be used. Unconfined - no profile should be applied.",
+                                                  "type": "string"
+                                                }
+                                              }
+                                            },
                                             "windowsOptions": {
                                               "description": "The Windows specific settings applied to all containers. If unspecified, the options from the PodSecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.",
                                               "type": [
@@ -3142,7 +3176,7 @@
                                           }
                                         },
                                         "startupProbe": {
-                                          "description": "StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. This is a beta feature enabled by the StartupProbe feature flag. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes",
+                                          "description": "StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes",
                                           "type": [
                                             "object",
                                             "null"
@@ -3614,7 +3648,7 @@
                                                     }
                                                   },
                                                   "fieldRef": {
-                                                    "description": "Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.",
+                                                    "description": "Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.",
                                                     "type": [
                                                       "object",
                                                       "null"
@@ -4567,6 +4601,29 @@
                                                 }
                                               }
                                             },
+                                            "seccompProfile": {
+                                              "description": "The seccomp options to use by this container. If seccomp options are provided at both the pod & container level, the container options override the pod options.",
+                                              "type": [
+                                                "object",
+                                                "null"
+                                              ],
+                                              "required": [
+                                                "type"
+                                              ],
+                                              "properties": {
+                                                "localhostProfile": {
+                                                  "description": "localhostProfile indicates a profile defined in a file on the node should be used. The profile must be preconfigured on the node to work. Must be a descending path, relative to the kubelet's configured seccomp profile location. Must only be set if type is \"Localhost\".",
+                                                  "type": [
+                                                    "string",
+                                                    "null"
+                                                  ]
+                                                },
+                                                "type": {
+                                                  "description": "type indicates which kind of seccomp profile will be applied. Valid options are: \n Localhost - a profile defined in a file on the node should be used. RuntimeDefault - the container runtime default profile should be used. Unconfined - no profile should be applied.",
+                                                  "type": "string"
+                                                }
+                                              }
+                                            },
                                             "windowsOptions": {
                                               "description": "The Windows specific settings applied to all containers. If unspecified, the options from the PodSecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.",
                                               "type": [
@@ -5088,7 +5145,7 @@
                                                     }
                                                   },
                                                   "fieldRef": {
-                                                    "description": "Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.",
+                                                    "description": "Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.",
                                                     "type": [
                                                       "object",
                                                       "null"
@@ -6046,6 +6103,29 @@
                                                 }
                                               }
                                             },
+                                            "seccompProfile": {
+                                              "description": "The seccomp options to use by this container. If seccomp options are provided at both the pod & container level, the container options override the pod options.",
+                                              "type": [
+                                                "object",
+                                                "null"
+                                              ],
+                                              "required": [
+                                                "type"
+                                              ],
+                                              "properties": {
+                                                "localhostProfile": {
+                                                  "description": "localhostProfile indicates a profile defined in a file on the node should be used. The profile must be preconfigured on the node to work. Must be a descending path, relative to the kubelet's configured seccomp profile location. Must only be set if type is \"Localhost\".",
+                                                  "type": [
+                                                    "string",
+                                                    "null"
+                                                  ]
+                                                },
+                                                "type": {
+                                                  "description": "type indicates which kind of seccomp profile will be applied. Valid options are: \n Localhost - a profile defined in a file on the node should be used. RuntimeDefault - the container runtime default profile should be used. Unconfined - no profile should be applied.",
+                                                  "type": "string"
+                                                }
+                                              }
+                                            },
                                             "windowsOptions": {
                                               "description": "The Windows specific settings applied to all containers. If unspecified, the options from the PodSecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.",
                                               "type": [
@@ -6079,7 +6159,7 @@
                                           }
                                         },
                                         "startupProbe": {
-                                          "description": "StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. This is a beta feature enabled by the StartupProbe feature flag. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes",
+                                          "description": "StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes",
                                           "type": [
                                             "object",
                                             "null"
@@ -6398,7 +6478,7 @@
                                     }
                                   },
                                   "preemptionPolicy": {
-                                    "description": "PreemptionPolicy is the Policy for preempting pods with lower priority. One of Never, PreemptLowerPriority. Defaults to PreemptLowerPriority if unset. This field is alpha-level and is only honored by servers that enable the NonPreemptingPriority feature.",
+                                    "description": "PreemptionPolicy is the Policy for preempting pods with lower priority. One of Never, PreemptLowerPriority. Defaults to PreemptLowerPriority if unset. This field is beta-level, gated by the NonPreemptingPriority feature-gate.",
                                     "type": [
                                       "string",
                                       "null"
@@ -6479,7 +6559,7 @@
                                         "format": "int64"
                                       },
                                       "fsGroupChangePolicy": {
-                                        "description": "fsGroupChangePolicy defines behavior of changing ownership and permission of the volume before being exposed inside Pod. This field will only apply to volume types which support fsGroup based ownership(and permissions). It will have no effect on ephemeral volume types such as: secret, configmaps and emptydir. Valid values are \"OnRootMismatch\" and \"Always\". If not specified defaults to \"Always\".",
+                                        "description": "fsGroupChangePolicy defines behavior of changing ownership and permission of the volume before being exposed inside Pod. This field will only apply to volume types which support fsGroup based ownership(and permissions). It will have no effect on ephemeral volume types such as: secret, configmaps and emptydir. Valid values are \"OnRootMismatch\" and \"Always\". If not specified, \"Always\" is used.",
                                         "type": [
                                           "string",
                                           "null"
@@ -6542,6 +6622,29 @@
                                               "string",
                                               "null"
                                             ]
+                                          }
+                                        }
+                                      },
+                                      "seccompProfile": {
+                                        "description": "The seccomp options to use by the containers in this pod.",
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ],
+                                        "required": [
+                                          "type"
+                                        ],
+                                        "properties": {
+                                          "localhostProfile": {
+                                            "description": "localhostProfile indicates a profile defined in a file on the node should be used. The profile must be preconfigured on the node to work. Must be a descending path, relative to the kubelet's configured seccomp profile location. Must only be set if type is \"Localhost\".",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          },
+                                          "type": {
+                                            "description": "type indicates which kind of seccomp profile will be applied. Valid options are: \n Localhost - a profile defined in a file on the node should be used. RuntimeDefault - the container runtime default profile should be used. Unconfined - no profile should be applied.",
+                                            "type": "string"
                                           }
                                         }
                                       },
@@ -6633,6 +6736,13 @@
                                       "null"
                                     ]
                                   },
+                                  "setHostnameAsFQDN": {
+                                    "description": "If true the pod's hostname will be configured as the pod's FQDN, rather than the leaf name (the default). In Linux containers, this means setting the FQDN in the hostname field of the kernel (the nodename field of struct utsname). In Windows containers, this means setting the registry value of hostname for the registry key HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\Tcpip\\\\Parameters to FQDN. If a pod does not have FQDN, this has no effect. Default to false.",
+                                    "type": [
+                                      "boolean",
+                                      "null"
+                                    ]
+                                  },
                                   "shareProcessNamespace": {
                                     "description": "Share a single process namespace between all of the containers in a pod. When this is set containers will be able to view and signal processes from other containers in the same pod, and the first process in each container will not be assigned PID 1. HostPID and ShareProcessNamespace cannot both be set. Optional: Default to false.",
                                     "type": [
@@ -6708,7 +6818,7 @@
                                     }
                                   },
                                   "topologySpreadConstraints": {
-                                    "description": "TopologySpreadConstraints describes how a group of pods ought to spread across topology domains. Scheduler will schedule pods in a way which abides by the constraints. This field is only honored by clusters that enable the EvenPodsSpread feature. All topologySpreadConstraints are ANDed.",
+                                    "description": "TopologySpreadConstraints describes how a group of pods ought to spread across topology domains. Scheduler will schedule pods in a way which abides by the constraints. All topologySpreadConstraints are ANDed.",
                                     "type": [
                                       "array",
                                       "null"
@@ -6789,7 +6899,7 @@
                                           }
                                         },
                                         "maxSkew": {
-                                          "description": "MaxSkew describes the degree to which pods may be unevenly distributed. It's the maximum permitted difference between the number of matching pods in any two topology domains of a given topology type. For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same labelSelector spread as 1/1/0: | zone1 | zone2 | zone3 | |   P   |   P   |       | - if MaxSkew is 1, incoming pod can only be scheduled to zone3 to become 1/1/1; scheduling it onto zone1(zone2) would make the ActualSkew(2-0) on zone1(zone2) violate MaxSkew(1). - if MaxSkew is 2, incoming pod can be scheduled onto any zone. It's a required field. Default value is 1 and 0 is not allowed.",
+                                          "description": "MaxSkew describes the degree to which pods may be unevenly distributed. When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference between the number of matching pods in the target topology and the global minimum. For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same labelSelector spread as 1/1/0: | zone1 | zone2 | zone3 | |   P   |   P   |       | - if MaxSkew is 1, incoming pod can only be scheduled to zone3 to become 1/1/1; scheduling it onto zone1(zone2) would make the ActualSkew(2-0) on zone1(zone2) violate MaxSkew(1). - if MaxSkew is 2, incoming pod can be scheduled onto any zone. When `whenUnsatisfiable=ScheduleAnyway`, it is used to give higher precedence to topologies that satisfy it. It's a required field. Default value is 1 and 0 is not allowed.",
                                           "type": "integer",
                                           "format": "int32"
                                         },
@@ -6798,7 +6908,7 @@
                                           "type": "string"
                                         },
                                         "whenUnsatisfiable": {
-                                          "description": "WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy the spread constraint. - DoNotSchedule (default) tells the scheduler not to schedule it - ScheduleAnyway tells the scheduler to still schedule it It's considered as \"Unsatisfiable\" if and only if placing incoming pod on any topology violates \"MaxSkew\". For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same labelSelector spread as 3/1/1: | zone1 | zone2 | zone3 | | P P P |   P   |   P   | If WhenUnsatisfiable is set to DoNotSchedule, incoming pod can only be scheduled to zone2(zone3) to become 3/2/1(3/1/2) as ActualSkew(2-1) on zone2(zone3) satisfies MaxSkew(1). In other words, the cluster can still be imbalanced, but scheduler won't make it *more* imbalanced. It's a required field.",
+                                          "description": "WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy the spread constraint. - DoNotSchedule (default) tells the scheduler not to schedule it. - ScheduleAnyway tells the scheduler to schedule the pod in any location,   but giving higher precedence to topologies that would help reduce the   skew. A constraint is considered \"Unsatisfiable\" for an incoming pod if and only if every possible node assigment for that pod would violate \"MaxSkew\" on some topology. For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same labelSelector spread as 3/1/1: | zone1 | zone2 | zone3 | | P P P |   P   |   P   | If WhenUnsatisfiable is set to DoNotSchedule, incoming pod can only be scheduled to zone2(zone3) to become 3/2/1(3/1/2) as ActualSkew(2-1) on zone2(zone3) satisfies MaxSkew(1). In other words, the cluster can still be imbalanced, but scheduler won't make it *more* imbalanced. It's a required field.",
                                           "type": "string"
                                         }
                                       }
@@ -7060,7 +7170,7 @@
                                           ],
                                           "properties": {
                                             "defaultMode": {
-                                              "description": "Optional: mode bits to use on created files by default. Must be a value between 0 and 0777. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
+                                              "description": "Optional: mode bits used to set permissions on created files by default. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
                                               "type": [
                                                 "integer",
                                                 "null"
@@ -7089,7 +7199,7 @@
                                                     "type": "string"
                                                   },
                                                   "mode": {
-                                                    "description": "Optional: mode bits to use on this file, must be a value between 0 and 0777. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
+                                                    "description": "Optional: mode bits used to set permissions on this file. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
                                                     "type": [
                                                       "integer",
                                                       "null"
@@ -7120,7 +7230,7 @@
                                           }
                                         },
                                         "csi": {
-                                          "description": "CSI (Container Storage Interface) represents storage that is handled by an external CSI driver (Alpha feature).",
+                                          "description": "CSI (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers (Beta feature).",
                                           "type": [
                                             "object",
                                             "null"
@@ -7186,7 +7296,7 @@
                                           ],
                                           "properties": {
                                             "defaultMode": {
-                                              "description": "Optional: mode bits to use on created files by default. Must be a value between 0 and 0777. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
+                                              "description": "Optional: mode bits to use on created files by default. Must be a Optional: mode bits used to set permissions on created files by default. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
                                               "type": [
                                                 "integer",
                                                 "null"
@@ -7233,7 +7343,7 @@
                                                     }
                                                   },
                                                   "mode": {
-                                                    "description": "Optional: mode bits to use on this file, must be a value between 0 and 0777. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
+                                                    "description": "Optional: mode bits used to set permissions on this file, must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
                                                     "type": [
                                                       "integer",
                                                       "null"
@@ -7295,6 +7405,203 @@
                                               "description": "Total amount of local storage required for this EmptyDir volume. The size limit is also applicable for memory medium. The maximum usage on memory medium EmptyDir would be the minimum value between the SizeLimit specified here and the sum of memory limits of all containers in a pod. The default is nil which means that the limit is undefined. More info: http://kubernetes.io/docs/user-guide/volumes#emptydir",
                                               "pattern": "^(\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))))?$",
                                               "x-kubernetes-int-or-string": true
+                                            }
+                                          }
+                                        },
+                                        "ephemeral": {
+                                          "description": "Ephemeral represents a volume that is handled by a cluster storage driver (Alpha feature). The volume's lifecycle is tied to the pod that defines it - it will be created before the pod starts, and deleted when the pod is removed. \n Use this if: a) the volume is only needed while the pod runs, b) features of normal volumes like restoring from snapshot or capacity    tracking are needed, c) the storage driver is specified through a storage class, and d) the storage driver supports dynamic volume provisioning through    a PersistentVolumeClaim (see EphemeralVolumeSource for more    information on the connection between this volume type    and PersistentVolumeClaim). \n Use PersistentVolumeClaim or one of the vendor-specific APIs for volumes that persist for longer than the lifecycle of an individual pod. \n Use CSI for light-weight local ephemeral volumes if the CSI driver is meant to be used that way - see the documentation of the driver for more information. \n A pod can use both types of ephemeral volumes and persistent volumes at the same time.",
+                                          "type": [
+                                            "object",
+                                            "null"
+                                          ],
+                                          "properties": {
+                                            "readOnly": {
+                                              "description": "Specifies a read-only configuration for the volume. Defaults to false (read/write).",
+                                              "type": [
+                                                "boolean",
+                                                "null"
+                                              ]
+                                            },
+                                            "volumeClaimTemplate": {
+                                              "description": "Will be used to create a stand-alone PVC to provision the volume. The pod in which this EphemeralVolumeSource is embedded will be the owner of the PVC, i.e. the PVC will be deleted together with the pod.  The name of the PVC will be `<pod name>-<volume name>` where `<volume name>` is the name from the `PodSpec.Volumes` array entry. Pod validation will reject the pod if the concatenated name is not valid for a PVC (for example, too long). \n An existing PVC with that name that is not owned by the pod will *not* be used for the pod to avoid using an unrelated volume by mistake. Starting the pod is then blocked until the unrelated PVC is removed. If such a pre-created PVC is meant to be used by the pod, the PVC has to updated with an owner reference to the pod once the pod exists. Normally this should not be necessary, but it may be useful when manually reconstructing a broken cluster. \n This field is read-only and no changes will be made by Kubernetes to the PVC after it has been created. \n Required, must not be nil.",
+                                              "type": [
+                                                "object",
+                                                "null"
+                                              ],
+                                              "required": [
+                                                "spec"
+                                              ],
+                                              "properties": {
+                                                "metadata": {
+                                                  "description": "May contain labels and annotations that will be copied into the PVC when creating it. No other fields are allowed and will be rejected during validation.",
+                                                  "type": [
+                                                    "object",
+                                                    "null"
+                                                  ]
+                                                },
+                                                "spec": {
+                                                  "description": "The specification for the PersistentVolumeClaim. The entire content is copied unchanged into the PVC that gets created from this template. The same fields as in a PersistentVolumeClaim are also valid here.",
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "accessModes": {
+                                                      "description": "AccessModes contains the desired access modes the volume should have. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1",
+                                                      "type": [
+                                                        "array",
+                                                        "null"
+                                                      ],
+                                                      "items": {
+                                                        "type": [
+                                                          "string",
+                                                          "null"
+                                                        ]
+                                                      }
+                                                    },
+                                                    "dataSource": {
+                                                      "description": "This field can be used to specify either: * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot) * An existing PVC (PersistentVolumeClaim) * An existing custom resource that implements data population (Alpha) In order to use custom resource types that implement data population, the AnyVolumeDataSource feature gate must be enabled. If the provisioner or an external controller can support the specified data source, it will create a new volume based on the contents of the specified data source.",
+                                                      "type": [
+                                                        "object",
+                                                        "null"
+                                                      ],
+                                                      "required": [
+                                                        "kind",
+                                                        "name"
+                                                      ],
+                                                      "properties": {
+                                                        "apiGroup": {
+                                                          "description": "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
+                                                          "type": [
+                                                            "string",
+                                                            "null"
+                                                          ]
+                                                        },
+                                                        "kind": {
+                                                          "description": "Kind is the type of resource being referenced",
+                                                          "type": "string"
+                                                        },
+                                                        "name": {
+                                                          "description": "Name is the name of resource being referenced",
+                                                          "type": "string"
+                                                        }
+                                                      }
+                                                    },
+                                                    "resources": {
+                                                      "description": "Resources represents the minimum resources the volume should have. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources",
+                                                      "type": [
+                                                        "object",
+                                                        "null"
+                                                      ],
+                                                      "properties": {
+                                                        "limits": {
+                                                          "description": "Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
+                                                          "type": [
+                                                            "object",
+                                                            "null"
+                                                          ],
+                                                          "additionalProperties": {
+                                                            "pattern": "^(\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))))?$",
+                                                            "x-kubernetes-int-or-string": true
+                                                          }
+                                                        },
+                                                        "requests": {
+                                                          "description": "Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
+                                                          "type": [
+                                                            "object",
+                                                            "null"
+                                                          ],
+                                                          "additionalProperties": {
+                                                            "pattern": "^(\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))))?$",
+                                                            "x-kubernetes-int-or-string": true
+                                                          }
+                                                        }
+                                                      }
+                                                    },
+                                                    "selector": {
+                                                      "description": "A label query over volumes to consider for binding.",
+                                                      "type": [
+                                                        "object",
+                                                        "null"
+                                                      ],
+                                                      "properties": {
+                                                        "matchExpressions": {
+                                                          "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
+                                                          "type": [
+                                                            "array",
+                                                            "null"
+                                                          ],
+                                                          "items": {
+                                                            "description": "A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.",
+                                                            "type": [
+                                                              "object",
+                                                              "null"
+                                                            ],
+                                                            "required": [
+                                                              "key",
+                                                              "operator"
+                                                            ],
+                                                            "properties": {
+                                                              "key": {
+                                                                "description": "key is the label key that the selector applies to.",
+                                                                "type": "string"
+                                                              },
+                                                              "operator": {
+                                                                "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.",
+                                                                "type": "string"
+                                                              },
+                                                              "values": {
+                                                                "description": "values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.",
+                                                                "type": [
+                                                                  "array",
+                                                                  "null"
+                                                                ],
+                                                                "items": {
+                                                                  "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                  ]
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        },
+                                                        "matchLabels": {
+                                                          "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is \"key\", the operator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
+                                                          "type": [
+                                                            "object",
+                                                            "null"
+                                                          ],
+                                                          "additionalProperties": {
+                                                            "type": [
+                                                              "string",
+                                                              "null"
+                                                            ]
+                                                          }
+                                                        }
+                                                      }
+                                                    },
+                                                    "storageClassName": {
+                                                      "description": "Name of the StorageClass required by the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1",
+                                                      "type": [
+                                                        "string",
+                                                        "null"
+                                                      ]
+                                                    },
+                                                    "volumeMode": {
+                                                      "description": "volumeMode defines what type of volume is required by the claim. Value of Filesystem is implied when not included in claim spec.",
+                                                      "type": [
+                                                        "string",
+                                                        "null"
+                                                      ]
+                                                    },
+                                                    "volumeName": {
+                                                      "description": "VolumeName is the binding reference to the PersistentVolume backing this claim.",
+                                                      "type": [
+                                                        "string",
+                                                        "null"
+                                                      ]
+                                                    }
+                                                  }
+                                                }
+                                              }
                                             }
                                           }
                                         },
@@ -7768,12 +8075,9 @@
                                             "object",
                                             "null"
                                           ],
-                                          "required": [
-                                            "sources"
-                                          ],
                                           "properties": {
                                             "defaultMode": {
-                                              "description": "Mode bits to use on created files by default. Must be a value between 0 and 0777. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
+                                              "description": "Mode bits used to set permissions on created files by default. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
                                               "type": [
                                                 "integer",
                                                 "null"
@@ -7782,7 +8086,10 @@
                                             },
                                             "sources": {
                                               "description": "list of volume projections",
-                                              "type": "array",
+                                              "type": [
+                                                "array",
+                                                "null"
+                                              ],
                                               "items": {
                                                 "description": "Projection that may be projected along with other supported volume types",
                                                 "type": [
@@ -7819,7 +8126,7 @@
                                                               "type": "string"
                                                             },
                                                             "mode": {
-                                                              "description": "Optional: mode bits to use on this file, must be a value between 0 and 0777. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
+                                                              "description": "Optional: mode bits used to set permissions on this file. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
                                                               "type": [
                                                                 "integer",
                                                                 "null"
@@ -7896,7 +8203,7 @@
                                                               }
                                                             },
                                                             "mode": {
-                                                              "description": "Optional: mode bits to use on this file, must be a value between 0 and 0777. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
+                                                              "description": "Optional: mode bits used to set permissions on this file, must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
                                                               "type": [
                                                                 "integer",
                                                                 "null"
@@ -7969,7 +8276,7 @@
                                                               "type": "string"
                                                             },
                                                             "mode": {
-                                                              "description": "Optional: mode bits to use on this file, must be a value between 0 and 0777. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
+                                                              "description": "Optional: mode bits used to set permissions on this file. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
                                                               "type": [
                                                                 "integer",
                                                                 "null"
@@ -8254,7 +8561,7 @@
                                           ],
                                           "properties": {
                                             "defaultMode": {
-                                              "description": "Optional: mode bits to use on created files by default. Must be a value between 0 and 0777. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
+                                              "description": "Optional: mode bits used to set permissions on created files by default. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
                                               "type": [
                                                 "integer",
                                                 "null"
@@ -8283,7 +8590,7 @@
                                                     "type": "string"
                                                   },
                                                   "mode": {
-                                                    "description": "Optional: mode bits to use on this file, must be a value between 0 and 0777. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
+                                                    "description": "Optional: mode bits used to set permissions on this file. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.",
                                                     "type": [
                                                       "integer",
                                                       "null"
@@ -8686,6 +8993,31 @@
             }
           }
         },
+        "relatedImages": {
+          "description": "List any related images, or other container images that your Operator might require to perform their functions. This list should also include operand images as well. All image references should be specified by digest (SHA) and not by tag. This field is only used during catalog creation and plays no part in cluster runtime.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "image",
+              "name"
+            ],
+            "properties": {
+              "image": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        },
         "replaces": {
           "description": "The name of a CSV this one replaces. Should match the `metadata.Name` field of the old CSV.",
           "type": [
@@ -8756,6 +9088,19 @@
             }
           }
         },
+        "skips": {
+          "description": "The name(s) of one or more CSV(s) that should be skipped in the upgrade graph. Should match the `metadata.Name` field of the CSV that should be skipped. This field is only used during catalog creation and plays no part in cluster runtime.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
         "version": {
           "description": "OperatorVersion is a wrapper around semver.Version which supports correct marshaling to YAML and JSON.",
           "type": [
@@ -8795,7 +9140,9 @@
                   "integer",
                   "null"
                 ],
-                "format": "int32"
+                "format": "int32",
+                "maximum": 65535,
+                "minimum": 1
               },
               "conversionCRDs": {
                 "type": [
@@ -8940,7 +9287,7 @@
                       }
                     },
                     "operations": {
-                      "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, or * for all operations. If '*' is present, the length of the slice must be one. Required.",
+                      "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or * for all of those operations and any future admission operations that are added. If '*' is present, the length of the slice must be one. Required.",
                       "type": [
                         "array",
                         "null"
@@ -9009,7 +9356,7 @@
       }
     },
     "status": {
-      "description": "ClusterServiceVersionStatus represents information about the status of a pod. Status may trail the actual state of a system.",
+      "description": "ClusterServiceVersionStatus represents information about the status of a CSV. Status may trail the actual state of a system.",
       "type": [
         "object",
         "null"
@@ -9030,6 +9377,66 @@
             "null"
           ],
           "format": "date-time"
+        },
+        "cleanup": {
+          "description": "CleanupStatus represents information about the status of cleanup while a CSV is pending deletion",
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "pendingDeletion": {
+              "description": "PendingDeletion is the list of custom resource objects that are pending deletion and blocked on finalizers. This indicates the progress of cleanup that is blocking CSV deletion or operator uninstall.",
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "description": "ResourceList represents a list of resources which are of the same Group/Kind",
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "required": [
+                  "group",
+                  "instances",
+                  "kind"
+                ],
+                "properties": {
+                  "group": {
+                    "type": "string"
+                  },
+                  "instances": {
+                    "type": "array",
+                    "items": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "required": [
+                        "name"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "namespace": {
+                          "description": "Namespace can be empty for cluster-scoped resources",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "kind": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
         },
         "conditions": {
           "description": "List of conditions, a history of state transitions",

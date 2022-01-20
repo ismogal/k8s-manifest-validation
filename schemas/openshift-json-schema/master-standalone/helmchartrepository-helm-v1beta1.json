@@ -27,7 +27,7 @@
     },
     "metadata": {
       "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2"
     },
     "spec": {
       "description": "spec holds user settable values for configuration",
@@ -94,6 +94,13 @@
           ],
           "maxLength": 2048,
           "minLength": 1
+        },
+        "disabled": {
+          "description": "If set to true, disable the repo usage in the cluster",
+          "type": [
+            "boolean",
+            "null"
+          ]
         },
         "name": {
           "description": "Optional associated human readable repository name, it can be used by UI for displaying purposes",

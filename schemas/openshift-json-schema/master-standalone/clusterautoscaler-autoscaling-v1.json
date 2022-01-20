@@ -24,7 +24,7 @@
     },
     "metadata": {
       "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2"
     },
     "spec": {
       "description": "Desired state of ClusterAutoscaler resource",
@@ -48,7 +48,7 @@
           ]
         },
         "maxNodeProvisionTime": {
-          "description": "Maximum time CA waits for node to be provisioned. Expects an unsigned duration string of decimal numbers each with optional fraction and a unit suffix, eg \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"\u00b5s\"), \"ms\", \"s\", \"m\", \"h\".",
+          "description": "Maximum time CA waits for node to be provisioned",
           "type": [
             "string",
             "null"

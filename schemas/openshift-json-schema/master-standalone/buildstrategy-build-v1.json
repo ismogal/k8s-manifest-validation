@@ -1,9 +1,6 @@
 {
   "description": "BuildStrategy contains the details of how to perform a build.",
   "type": "object",
-  "required": [
-    "type"
-  ],
   "properties": {
     "customStrategy": {
       "description": "customStrategy holds the parameters to the Custom build strategy",

@@ -1,5 +1,5 @@
 {
-  "description": "Etcd provides information to configure an operator to manage kube-apiserver.",
+  "description": "Etcd provides information to configure an operator to manage etcd.",
   "type": "object",
   "required": [
     "spec"
@@ -27,7 +27,7 @@
     },
     "metadata": {
       "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      "$ref": "_definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2"
     },
     "spec": {
       "type": [
@@ -252,6 +252,13 @@
                 ],
                 "format": "int32"
               },
+              "lastFailedCount": {
+                "description": "lastFailedCount is how often the last failed revision failed.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
               "lastFailedRevision": {
                 "description": "lastFailedRevision is the generation of the deployment we tried and failed to deploy.",
                 "type": [
@@ -272,6 +279,14 @@
                     "null"
                   ]
                 }
+              },
+              "lastFailedTime": {
+                "description": "lastFailedTime is the time the last failed revision failed the last time.",
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
               },
               "nodeName": {
                 "description": "nodeName is the name of the node",

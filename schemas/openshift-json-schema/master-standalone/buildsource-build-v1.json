@@ -1,9 +1,6 @@
 {
   "description": "BuildSource is the SCM used for the build.",
   "type": "object",
-  "required": [
-    "type"
-  ],
   "properties": {
     "binary": {
       "description": "binary builds accept a binary as their input. The binary is generally assumed to be a tar, gzipped tar, or zip file depending on the strategy. For container image builds, this is the build context and an optional Dockerfile may be specified to override any Dockerfile in the build context. For Source builds, this is assumed to be an archive as described above. For Source and container image builds, if binary.asFile is set the build will receive a directory with a single file. contextDir may be used when an archive is provided. Custom builds will receive this binary as input on STDIN.",
